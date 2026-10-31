@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:4.4.1
+
     steps:
       - name: Baixar projeto
         uses: actions/checkout@v4
@@ -23,7 +24,7 @@ jobs:
           unzip -q aurora_rpg_v0.4.zip -d projeto
           test -f projeto/project.godot
 
-      - name: Gerar APK
+      - name: Gerar APK Android
         run: |
           godot --headless --path projeto --export-debug "Android" build/android/CronicasDeAurora.apk
 
@@ -34,4 +35,3 @@ jobs:
           path: build/android/CronicasDeAurora.apk
           if-no-files-found: error
           retention-days: 14
-
