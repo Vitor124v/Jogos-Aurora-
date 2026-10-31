@@ -1,1 +1,37 @@
 
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "aurora_rpg_v0.4.zip"
+      - ".github/workflows/android.yml"
+
+jobs:
+  export-android:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - name: Baixar projeto
+        uses: actions/checkout@v4
+
+      - name: Extrair projeto
+        run: |
+          mkdir -p projeto build/android
+          unzip -q aurora_rpg_v0.4.zip -d projeto
+          test -f projeto/project.godot
+
+      - name: Gerar APK
+        run: |
+          godot --headless --path projeto --export-debug "Android" build/android/CronicasDeAurora.apk
+
+      - name: Salvar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Cronicas-de-Aurora-APK
+          path: build/android/CronicasDeAurora.apk
+          if-no-files-found: error
+          retention-days: 14
+
